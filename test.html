@@ -1,0 +1,47 @@
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="multiline.css">
+<script src="https://d3js.org/d3.v3.js" ></script>
+</head>
+
+<body>
+d3 test
+
+<div class="chart-wrapper" id="chart-id"></div>
+
+
+<script type="text/javascript" src="data.json"></script>
+<script src="multiline.js" charset="utf-8"></script>
+<script type="text/javascript">
+	var data = elastic_data.hits.hits.map(x => x._source).map(x => {
+		return	{'date' : new Date(x.timestamp),
+			'auc_rf': +x.auc_rf,
+			'auc_mlp' : +x.auc_mlp,
+			'silhouette' : +x.silhouette};
+	});
+
+	function compareObjs(a,b) {
+		if (a.date < b.date) 
+			return -1
+		else if (a.date > b.date) 
+			return 1
+		else 
+			return 0
+	}
+	var sorted_data = data.sort(compareObjs)
+	console.log(sorted_data);
+
+
+	var chart = makeLineChart(sorted_data, 'date', {
+		'auc_rf' : {column: 'auc_rf'},
+		'auc_mlp' : {column: 'auc_mlp'},
+		'silhouette' : {column: 'silhouette'} 
+		}, {xAxis: 'Date', yAxis: 'Normalized'});
+		chart.bind("#chart-id");
+		chart.render();
+</script>
+
+
+</body>
+
+</html>
