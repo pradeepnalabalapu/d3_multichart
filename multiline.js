@@ -1,22 +1,28 @@
 function makeLineChart(dataset, xName, yObjs, axisLables) {
-	var chartObj = {};
-	var color = d3.scale.category10();
-	chartObj.xAxisLable = axisLables.xAxis;
-	chartObj.yAxisLable = axisLables.yAxis;
-	/*
+  var chartObj = {};
+  var color = d3.scale.category10();
+  const CHART_INIT_WIDTH = 650;
+  const CHART_INIT_HEIGHT = 480;
+  chartObj.xAxisLable = axisLables.xAxis;
+  chartObj.yAxisLable = axisLables.yAxis;
+  /*
 		 yObjsects format:
 		 {y1:{column:'',name:'name',color:'color'},y2}
 	 */
 
-	chartObj.data = dataset;
-	chartObj.margin = {top: 15, right: 60, bottom: 30, left: 50};
-	chartObj.width = 650 - chartObj.margin.left - chartObj.margin.right;
-	chartObj.height = 480 - chartObj.margin.top - chartObj.margin.bottom;
+  chartObj.data = dataset;
+  chartObj.margin = { top: 15, right: 60, bottom: 30, left: 50 };
+  chartObj.width =
+    CHART_INIT_WIDTH - chartObj.margin.left - chartObj.margin.right;
+  chartObj.height =
+    CHART_INIT_HEIGHT - chartObj.margin.top - chartObj.margin.bottom;
 
 	// So we can pass the x and y as strings when creating the function
-	chartObj.xFunct = function(d){return d[xName]};
-	var date = dataset[0].date;
-	console.log(date);
+	chartObj.xFunct = function(d){
+		return d[xName]
+};
+
+
 
 	// For each yObjs argument, create a yFunction
 	function getYFn(column) {
@@ -82,7 +88,7 @@ function makeLineChart(dataset, xName, yObjs, axisLables) {
 	}
 
 
-	chartObj.svg;
+	//chartObj.svg;
 
 	// Change chart size according to window size
 	chartObj.update_svg_size = function () {
@@ -123,6 +129,7 @@ function makeLineChart(dataset, xName, yObjs, axisLables) {
 		chartObj.mainDiv.append("div").attr("class", "inner-wrapper").append("div").attr("class", "outer-box").append("div").attr("class", "inner-box");
 		chartSelector = selector + " .inner-box";
 		chartObj.chartDiv = d3.select(chartSelector);
+		console.log("In bind chartObj.chartDiv.style = "+JSON.stringify({width: chartObj.chartDiv.style("width"), height: chartObj.chartDiv.style("height")}));
 		d3.select(window).on('resize.' + chartSelector, chartObj.update_svg_size);
 		chartObj.update_svg_size();
 		return chartObj;

@@ -1,8 +1,9 @@
 .chart-wrapper {
 	max-width: 950px;
 	min-width: 304px;
-margin: 0 auto;
-				background-color: #FAF7F7;
+	margin: 0 auto;
+	background-color: #FAF7F7;
+	min-height: 152px;		
 }
 
 .chart-wrapper .inner-wrapper {
