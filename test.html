@@ -8,37 +8,85 @@
 d3 test
 
 <div class="chart-wrapper" id="chart-id"></div>
+<div id="barch">
+  <div class="bar"></div>
+  <div class="bar"></div>
+  <div class="bar"></div>
+  <div class="bar"></div>
+</div>
 
+<style type="text/css" media="screen">
+.bar {
+  float: left;
+  width: 30px;
+  margin-right: 20px;
+  background-color: #F4F5F7;
+  border: 1px solid #C5C5C5;
+}
+</style>
 
 <script type="text/javascript" src="data.json"></script>
 <script src="multiline.js" charset="utf-8"></script>
 <script type="text/javascript">
-	var data = elastic_data.hits.hits.map(x => x._source).map(x => {
-		return	{'date' : new Date(x.timestamp),
-			'auc_rf': +x.auc_rf,
-			'auc_mlp' : +x.auc_mlp,
-			'silhouette' : +x.silhouette};
-	});
+  var data = elastic_data.hits.hits.map(x => x._source).map(x => {
+    return  {'date' : new Date(x.timestamp),
+      'auc_rf': +x.auc_rf,
+      'auc_mlp' : +x.auc_mlp,
+      'silhouette' : +x.silhouette};
+  });
 
-	function compareObjs(a,b) {
-		if (a.date < b.date) 
-			return -1
-		else if (a.date > b.date) 
-			return 1
-		else 
-			return 0
-	}
-	var sorted_data = data.sort(compareObjs)
-	console.log(sorted_data);
+  function compareObjs(a,b) {
+    if (a.date < b.date) 
+      return -1
+    else if (a.date > b.date) 
+      return 1
+    else 
+      return 0
+  }
+  var sorted_data = data.sort(compareObjs)
+  console.log(sorted_data);
 
 
-	var chart = makeLineChart(sorted_data, 'date', {
-		'auc_rf' : {column: 'auc_rf'},
-		'auc_mlp' : {column: 'auc_mlp'},
-		'silhouette' : {column: 'silhouette'} 
-		}, {xAxis: 'Date', yAxis: 'Normalized'});
-		chart.bind("#chart-id");
-		chart.render();
+  var chart = makeLineChart(sorted_data, 'date', {
+    'auc_rf' : {column: 'auc_rf'},
+    'auc_mlp' : {column: 'auc_mlp'},
+    'silhouette' : {column: 'silhouette'} 
+    }, {xAxis: 'Date', yAxis: 'Normalized'});
+    chart.bind("#chart-id");
+    chart.render();
+
+  var numbers = [15, 8 , 42, 4, 32];
+
+  function update() {
+  var selection = d3.select("#barch")
+    .selectAll(".bar").data(numbers)
+    .style("height", function(d){
+      return d + "px";
+    })
+    .style("margin-top", function(d){
+      return (100 - d) + "px";
+    });
+
+    selection.enter()
+    .append("div").attr("class", "bar")
+    .style("height", function(d){
+      return d + "px";
+    })
+    .style("margin-top", function(d){
+      return (100 - d) + "px";
+    })
+    .on("click", function(e, i){
+      numbers.splice(i, 1);
+      update();
+    });
+    
+    selection.exit().remove();
+  };
+
+
+  update();
+
+
 </script>
 
 
